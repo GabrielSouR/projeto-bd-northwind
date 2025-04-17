@@ -94,5 +94,5 @@ Isso garante que novos pedidos recebam um ID correto e sequencial a partir do ma
 
 ---
 
-> Projeto prático desenvolvido por Gabriel de Souza Ribeiro e Bryan Miller para fins de avaliação em disciplina de Banco de Dados II - 2025/1
+> Projeto prático desenvolvido por Gabriel de Souza Ribeiro e Bryan Muller para fins de avaliação em disciplina de Banco de Dados II - 2025/1
 

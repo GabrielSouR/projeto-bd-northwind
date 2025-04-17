@@ -2,15 +2,18 @@ from controller.pedido_controller import criar_pedido_interativo, criar_pedido_i
 from relatorios.pedido_detalhado import exibir_pedido_detalhado
 from relatorios.ranking_funcionarios import exibir_ranking_funcionarios
 from relatorios.pedido_detalhado_inseguro import exibir_pedido_detalhado_inseguro
-from model.pedido_model import Pedido
+from sqlalchemy_version.relatorios.pedido_detalhado import exibir_pedido_detalhado_orm
+from sqlalchemy_version.controller.pedido_controller import criar_pedido_sqlalchemy
+from sqlalchemy_version.relatorios.ranking_funcionarios import exibir_ranking_funcionarios_orm
 from datetime import datetime, timedelta
 
 def menu_interativo():
-     while True:
+    while True:
         print("\n=== Sistema de Pedidos Northwind ===")
         print("1 - Inserir pedido (modo seguro)")
         print("2 - Inserir pedido (modo vulnerável)")
         print("3 - Relatórios")
+        print("4 - Inserir pedido (ORM)")
         print("0 - Sair")
         escolha = input("Escolha uma opção: ")
 
@@ -20,11 +23,14 @@ def menu_interativo():
             coletar_dados_do_pedido(seguro=False)
         elif escolha == '3':
             menu_relatorios()
+        elif escolha == '4':
+            criar_pedido_sqlalchemy()
         elif escolha == '0':
             print("Encerrando...")
             break
         else:
             print("Opção inválida.")
+
 
 def coletar_dados_do_pedido(seguro=True):
     print("\n=== Cadastro de Pedido ===")
@@ -49,18 +55,19 @@ def coletar_dados_do_pedido(seguro=True):
         discount = float(input("Desconto (0 a 1): "))
         items.append((int(product_id), unit_price, quantity, discount))
 
-    pedido = Pedido(customer_id, employee_id, order_date, required_date, ship_name, items)
-
     if seguro:
         criar_pedido_interativo(customer_id, employee_id, order_date, required_date, ship_name, items)
     else:
         criar_pedido_inseguro(customer_id, employee_id, order_date, required_date, ship_name, items)
-        
+
+
 def menu_relatorios():
     print("\n=== Relatórios ===")
-    print("1 - Detalhes de um pedido (seguro)")
-    print("2 - Ranking de funcionários por período")
+    print("1 - Detalhes de um pedido (psycopg2 seguro)")
+    print("2 - Ranking de funcionários por período (psycopg2)")
     print("3 - Detalhes de um pedido (INSEGURO - simulação de SQL Injection)")
+    print("4 - Detalhes de um pedido (ORM)")
+    print("5 - Ranking de funcionários por período (ORM)")
     print("0 - Voltar ao menu principal")
     escolha = input("Escolha uma opção: ")
 
@@ -82,8 +89,21 @@ def menu_relatorios():
         entrada = input("Digite o número do pedido (ou tente uma injeção): ")
         exibir_pedido_detalhado_inseguro(entrada)
 
+    elif escolha == '4':
+        order_id = int(input("Digite o número do pedido: "))
+        exibir_pedido_detalhado_orm(order_id)
+
+    elif escolha == '5':
+        data_inicio = input("Data de início (YYYY-MM-DD): ")
+        data_fim = input("Data de fim (YYYY-MM-DD): ")
+        try:
+            data_inicio = datetime.strptime(data_inicio, "%Y-%m-%d").date()
+            data_fim = datetime.strptime(data_fim, "%Y-%m-%d").date()
+            exibir_ranking_funcionarios_orm(data_inicio, data_fim)
+        except ValueError:
+            print("Datas em formato inválido. Use YYYY-MM-DD.")
+
     elif escolha == '0':
         return
     else:
         print("Opção inválida.")
-
