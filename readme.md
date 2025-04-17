@@ -61,19 +61,13 @@ O projeto demonstra dois cenários:
 
 ## :rocket: Como rodar o projeto
 
-### ὜4 Versão com `psycopg2` (driver puro)
+### ὜4 Iniciar com `psycopg2` (driver puro)
 ```bash
 python app_driver.py
 ```
 No menu interativo, você pode:
 - Inserir pedidos (modo seguro ou inseguro)
 - Ver relatórios (seguro e vulnerável)
-
-### ὜4 Versão com `SQLAlchemy ORM`
-```bash
-python -m sqlalchemy_version.app_sqlalchemy
-```
-Essa versão reimplementa a inserção de pedidos com ORM, mantendo a mesma lógica da versão principal.
 
 ---
 
